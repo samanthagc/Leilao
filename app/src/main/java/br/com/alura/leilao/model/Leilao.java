@@ -9,6 +9,7 @@ public class Leilao implements Serializable {
     private final String descricao;
     private final List<Lance> lances;
     private double maiorLance = Double.NEGATIVE_INFINITY;
+    private double menorLance = Double.POSITIVE_INFINITY;
 
     public Leilao(String descricao) {
         this.descricao = descricao;
@@ -19,10 +20,17 @@ public class Leilao implements Serializable {
         if (valorLance > maiorLance) {
             maiorLance = valorLance;
         }
+        if (valorLance < maiorLance){
+            menorLance = valorLance;
+        }
     }
 
     public double getMaiorLance() {
         return maiorLance;
+    }
+
+    public double getMenorLance() {
+        return menorLance;
     }
 
     public String getDescricao() {
