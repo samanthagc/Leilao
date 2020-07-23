@@ -4,20 +4,20 @@ import org.junit.Test;
 
 import java.util.List;
 
+import br.com.alura.leilao.builder.LeilaoBuilder;
+
 import static org.junit.Assert.*;
 
 public class LeilaoTest {
 
-    public static final double DELTA = 0.0001;
+    private static final double DELTA = 0.0001;
     private final Leilao CONSOLE = new Leilao("Console");
     private final Usuario ALEX = new Usuario("Alex");
 
     @Test
     public void deve_DevolverDescricao_QuandoRecebeDescricao() {
-        //executar ação experada
         String descricaoDevolvida = CONSOLE.getDescricao();
 
-        //testar resultado esperado
         assertEquals("Console", descricaoDevolvida);
     }
 
@@ -61,11 +61,13 @@ public class LeilaoTest {
 
     @Test
     public void deve_DevolverTresMaioresLances_QuandoRecebeExatosTresLances() {
-        CONSOLE.propoe(new Lance(ALEX, 200.0));
-        CONSOLE.propoe(new Lance(new Usuario("Regina"), 400.0));
-        CONSOLE.propoe(new Lance(ALEX, 500.0));
+        final Leilao console = new LeilaoBuilder("Console")
+                .lance(ALEX, 200.0)
+                .lance(new Usuario("Regina"), 400.0)
+                .lance(ALEX, 500.0)
+                .build();
 
-        List<Lance> tresMaioresLancesDevolvidos = CONSOLE.tresMaioresLances();
+        List<Lance> tresMaioresLancesDevolvidos = console.tresMaioresLances();
 
         assertEquals(3, tresMaioresLancesDevolvidos.size());
         assertEquals(500.0, tresMaioresLancesDevolvidos.get(0).getValor(), DELTA);
@@ -105,22 +107,23 @@ public class LeilaoTest {
     @Test
     public void deve_DevolverTresMaioresLances_QuandoRecebeMaisDeTresLances() {
         final Usuario REGINA = new Usuario("Regina");
+        final Leilao console = new LeilaoBuilder("Console")
+                .lance(ALEX, 200.0)
+                .lance(REGINA, 400.0)
+                .lance(ALEX, 500.0)
+                .lance(REGINA, 550.0)
+                .build();
 
-        CONSOLE.propoe(new Lance(ALEX, 200.0));
-        CONSOLE.propoe(new Lance(REGINA, 400.0));
-        CONSOLE.propoe(new Lance(ALEX, 500.0));
-        CONSOLE.propoe(new Lance(REGINA, 550.0));
-
-        List<Lance> tresMaioresLancesDevolvidosParaQuatroLances = CONSOLE.tresMaioresLances();
+        List<Lance> tresMaioresLancesDevolvidosParaQuatroLances = console.tresMaioresLances();
 
         assertEquals(3, tresMaioresLancesDevolvidosParaQuatroLances.size());
         assertEquals(550.0, tresMaioresLancesDevolvidosParaQuatroLances.get(0).getValor(), DELTA);
         assertEquals(500.0, tresMaioresLancesDevolvidosParaQuatroLances.get(1).getValor(), DELTA);
         assertEquals(400.0, tresMaioresLancesDevolvidosParaQuatroLances.get(2).getValor(), DELTA);
 
-        CONSOLE.propoe(new Lance(ALEX, 620.0));
+        console.propoe(new Lance(ALEX, 620.0));
 
-        List<Lance> tresMaioresLancesDevolvidosParaCincoLances = CONSOLE.tresMaioresLances();
+        List<Lance> tresMaioresLancesDevolvidosParaCincoLances = console.tresMaioresLances();
 
         assertEquals(3, tresMaioresLancesDevolvidosParaCincoLances.size());
         assertEquals(620.0, tresMaioresLancesDevolvidosParaCincoLances.get(0).getValor(), DELTA);
@@ -166,20 +169,22 @@ public class LeilaoTest {
     public void naoDeve_AdicionarLance_QuandoUsuarioDerCincoLances() {
         final Usuario REGINA = new Usuario("Regina");
 
-        CONSOLE.propoe(new Lance(ALEX, 100.0));
-        CONSOLE.propoe(new Lance(REGINA, 200.0));
-        CONSOLE.propoe(new Lance(ALEX, 300.0));
-        CONSOLE.propoe(new Lance(REGINA, 400.0));
-        CONSOLE.propoe(new Lance(ALEX, 500.0));
-        CONSOLE.propoe(new Lance(REGINA, 600.0));
-        CONSOLE.propoe(new Lance(ALEX, 700.0));
-        CONSOLE.propoe(new Lance(REGINA, 800.0));
-        CONSOLE.propoe(new Lance(ALEX, 900.0));
-        CONSOLE.propoe(new Lance(REGINA, 1000.0));
-        CONSOLE.propoe(new Lance(ALEX, 1100.0));
-        CONSOLE.propoe(new Lance(REGINA, 1200.0));
+        final Leilao console = new LeilaoBuilder("Console")
+                .lance(ALEX, 100.0)
+                .lance(REGINA, 200.0)
+                .lance(ALEX, 300.0)
+                .lance(REGINA, 400.0)
+                .lance(ALEX, 500.0)
+                .lance(REGINA, 600.0)
+                .lance(ALEX, 700.0)
+                .lance(REGINA, 800.0)
+                .lance(ALEX, 900.0)
+                .lance(REGINA, 1000.0)
+                .lance(ALEX, 1100.0)
+                .lance(REGINA, 1200.0)
+                .build();
 
-        int quantidadeLancesDevolvida = CONSOLE.quantidadeLances();
+        int quantidadeLancesDevolvida = console.quantidadeLances();
 
         assertEquals(10, quantidadeLancesDevolvida);
 
