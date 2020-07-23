@@ -60,26 +60,6 @@ public class LeilaoTest {
     }
 
     @Test
-    public void deve_DevolverMenorLance_QuandoRecebeMaisDeUmLanceEmOrdemCrescente() {
-        CONSOLE.propoe(new Lance(ALEX, 100.0));
-        CONSOLE.propoe(new Lance(new Usuario("Regina"), 200.0));
-
-        double menorLanceDevolvido = CONSOLE.getMenorLance();
-
-        assertEquals(100.0, menorLanceDevolvido, DELTA);
-    }
-
-    @Test
-    public void deve_DevolverMenorLance_QuandoRecebeMaisDeUmLanceEmOrdemDecrescente() {
-        CONSOLE.propoe(new Lance(ALEX, 10000.0));
-        CONSOLE.propoe(new Lance(new Usuario("Regina"), 2000.0));
-
-        double menorLanceDevolvido = CONSOLE.getMenorLance();
-
-        assertEquals(2000.0, menorLanceDevolvido, DELTA);
-    }
-
-    @Test
     public void deve_DevolverTresMaioresLances_QuandoRecebeExatosTresLances() {
         CONSOLE.propoe(new Lance(ALEX, 200.0));
         CONSOLE.propoe(new Lance(new Usuario("Regina"), 400.0));
@@ -146,5 +126,29 @@ public class LeilaoTest {
         assertEquals(620.0, tresMaioresLancesDevolvidosParaCincoLances.get(0).getValor(), DELTA);
         assertEquals(550.0, tresMaioresLancesDevolvidosParaCincoLances.get(1).getValor(), DELTA);
         assertEquals(500.0, tresMaioresLancesDevolvidosParaCincoLances.get(2).getValor(), DELTA);
+    }
+
+    @Test
+    public void deve_DevolverValorZeroParaMaiorLance_QuandoNaoTiverLances() {
+        double maiorLanceDevolvido = CONSOLE.getMaiorLance();
+
+        assertEquals(0.0, maiorLanceDevolvido, DELTA);
+    }
+
+    @Test
+    public void deve_DevolverValorZeroParaMenorLance_QuandoNaoTiverLances() {
+        double menorLanceDevolvido = CONSOLE.getMenorLance();
+
+        assertEquals(0.0, menorLanceDevolvido, DELTA);
+    }
+
+    @Test
+    public void naoDeve_AdicionarLance_QuandoForMenorQueOMaiorLance() {
+        CONSOLE.propoe(new Lance(ALEX, 500.0));
+        CONSOLE.propoe(new Lance(new Usuario("Regina"), 400.0));
+
+        int quantidadeLancesDevolvida = CONSOLE.quantidadeLances();
+
+        assertEquals(1, quantidadeLancesDevolvida);
     }
 }
