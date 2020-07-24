@@ -1,5 +1,6 @@
 package br.com.alura.leilao.model;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.util.List;
@@ -9,7 +10,13 @@ import br.com.alura.leilao.exception.LanceMenorQueUltimoLanceException;
 import br.com.alura.leilao.exception.LanceSeguidoDoMesmoUsuarioException;
 import br.com.alura.leilao.exception.UsuarioJaDeuCincoLancesException;
 
+import static org.hamcrest.CoreMatchers.both;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class LeilaoTest {
 
@@ -21,7 +28,8 @@ public class LeilaoTest {
     public void deve_DevolverDescricao_QuandoRecebeDescricao() {
         String descricaoDevolvida = CONSOLE.getDescricao();
 
-        assertEquals("Console", descricaoDevolvida);
+//        assertEquals("Console", descricaoDevolvida);
+        assertThat(descricaoDevolvida, is(equalTo("Console")));
     }
 
     @Test
@@ -30,7 +38,8 @@ public class LeilaoTest {
 
         double maiorLanceDevolvido = CONSOLE.getMaiorLance();
 
-        assertEquals(200.0, maiorLanceDevolvido, DELTA);
+//        assertEquals(200.0, maiorLanceDevolvido, DELTA);
+        assertThat(maiorLanceDevolvido, closeTo(200.0, DELTA));
     }
 
     @Test
@@ -72,10 +81,12 @@ public class LeilaoTest {
 
         List<Lance> tresMaioresLancesDevolvidos = console.tresMaioresLances();
 
-        assertEquals(3, tresMaioresLancesDevolvidos.size());
-        assertEquals(500.0, tresMaioresLancesDevolvidos.get(0).getValor(), DELTA);
-        assertEquals(400.0, tresMaioresLancesDevolvidos.get(1).getValor(), DELTA);
-        assertEquals(200.0, tresMaioresLancesDevolvidos.get(2).getValor(), DELTA);
+        assertThat(tresMaioresLancesDevolvidos,
+                both(Matchers.<Lance>hasSize(3))
+                        .and(contains(
+                                new Lance(ALEX, 500.0),
+                                new Lance(new Usuario("Regina"), 400.0),
+                                new Lance(ALEX, 200.0))));
     }
 
     @Test

@@ -3,6 +3,7 @@ package br.com.alura.leilao.model;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Lance implements Serializable, Comparable{
 
@@ -32,5 +33,19 @@ public class Lance implements Serializable, Comparable{
 
     public Usuario getUsuario() {
         return usuario;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lance lance = (Lance) o;
+        return Double.compare(lance.valor, valor) == 0 &&
+                usuario.equals(lance.usuario);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(usuario, valor);
     }
 }
