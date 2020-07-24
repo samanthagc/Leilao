@@ -2,6 +2,9 @@ package br.com.alura.leilao;
 
 import org.junit.Test;
 
+import br.com.alura.leilao.model.Usuario;
+
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 
 /**
