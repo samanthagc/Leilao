@@ -1,14 +1,12 @@
 package br.com.alura.leilao.ui.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
-import java.io.Serializable;
 
 import br.com.alura.leilao.R;
 import br.com.alura.leilao.api.EnviadorDeLance;
@@ -17,6 +15,7 @@ import br.com.alura.leilao.database.dao.UsuarioDAO;
 import br.com.alura.leilao.formatter.FormatadorDeMoeda;
 import br.com.alura.leilao.model.Lance;
 import br.com.alura.leilao.model.Leilao;
+import br.com.alura.leilao.ui.dialog.AvisoDialogManager;
 import br.com.alura.leilao.ui.dialog.NovoLanceDialog;
 
 import static br.com.alura.leilao.ui.activity.LeilaoConstantes.CHAVE_LEILAO;
@@ -94,7 +93,7 @@ public class LancesLeilaoActivity extends AppCompatActivity {
         EnviadorDeLance enviador = new EnviadorDeLance(
                 client,
                 lanceProcessadoListener(),
-                this);
+                new AvisoDialogManager(this));
         enviador.envia(leilaoRecebido, lance);
     }
 
