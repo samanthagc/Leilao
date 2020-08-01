@@ -10,13 +10,17 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import br.com.alura.leilao.R;
 import br.com.alura.leilao.api.retrofit.client.TesteWebClient;
+import br.com.alura.leilao.formatter.FormatadorDeMoeda;
 import br.com.alura.leilao.model.Leilao;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.fail;
 
 public class ListaLeilaoTelaTest {
@@ -28,6 +32,7 @@ public class ListaLeilaoTelaTest {
     public ActivityTestRule<ListaLeilaoActivity> activity =
             new ActivityTestRule<>(ListaLeilaoActivity.class, true, false);
     private final TesteWebClient webClient = new TesteWebClient();
+    private final FormatadorDeMoeda formatadorDeMoeda = new FormatadorDeMoeda();
 
     @Before
     public void setup() throws IOException {
@@ -40,7 +45,13 @@ public class ListaLeilaoTelaTest {
 
         activity.launchActivity(new Intent());
 
-        onView(withText("TV")).check(matches(isDisplayed()));
+        onView(allOf(withText("TV"), withId(R.id.item_leilao_descricao)))
+                .check(matches(isDisplayed()));
+
+        String formatoEsperado = formatadorDeMoeda.transformaEmReal(0.00);
+
+        onView(allOf(withText(formatoEsperado), withId(R.id.item_leilao_maior_lance)))
+                .check(matches(isDisplayed()));
     }
 
     @Test
@@ -49,8 +60,11 @@ public class ListaLeilaoTelaTest {
 
         activity.launchActivity(new Intent());
 
-        onView(withText("TV")).check(matches(isDisplayed()));
-        onView(withText("Radio")).check(matches(isDisplayed()));
+        onView(allOf(withText("TV"), withId(R.id.item_leilao_descricao)))
+                .check(matches(isDisplayed()));
+
+        onView(allOf(withText("Radio"), withId(R.id.item_leilao_descricao)))
+                .check(matches(isDisplayed()));
 
     }
 
