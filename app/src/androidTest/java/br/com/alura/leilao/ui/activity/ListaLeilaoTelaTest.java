@@ -17,10 +17,8 @@ import br.com.alura.leilao.model.Leilao;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.core.AllOf.allOf;
+import static br.com.alura.leilao.matchers.ViewMatcher.apareceLeilaoNaPosicao;
 import static org.junit.Assert.fail;
 
 public class ListaLeilaoTelaTest {
@@ -32,7 +30,6 @@ public class ListaLeilaoTelaTest {
     public ActivityTestRule<ListaLeilaoActivity> activity =
             new ActivityTestRule<>(ListaLeilaoActivity.class, true, false);
     private final TesteWebClient webClient = new TesteWebClient();
-    private final FormatadorDeMoeda formatadorDeMoeda = new FormatadorDeMoeda();
 
     @Before
     public void setup() throws IOException {
@@ -45,13 +42,9 @@ public class ListaLeilaoTelaTest {
 
         activity.launchActivity(new Intent());
 
-        onView(allOf(withText("TV"), withId(R.id.item_leilao_descricao)))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.lista_leilao_recyclerview))
+                .check(matches(apareceLeilaoNaPosicao(0, "TV", 0.00)));
 
-        String formatoEsperado = formatadorDeMoeda.transformaEmReal(0.00);
-
-        onView(allOf(withText(formatoEsperado), withId(R.id.item_leilao_maior_lance)))
-                .check(matches(isDisplayed()));
     }
 
     @Test
@@ -60,11 +53,11 @@ public class ListaLeilaoTelaTest {
 
         activity.launchActivity(new Intent());
 
-        onView(allOf(withText("TV"), withId(R.id.item_leilao_descricao)))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.lista_leilao_recyclerview))
+                .check(matches(apareceLeilaoNaPosicao(0, "TV", 0.00)));
 
-        onView(allOf(withText("Radio"), withId(R.id.item_leilao_descricao)))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.lista_leilao_recyclerview))
+                .check(matches(apareceLeilaoNaPosicao(1, "Radio", 0.00)));
 
     }
 
