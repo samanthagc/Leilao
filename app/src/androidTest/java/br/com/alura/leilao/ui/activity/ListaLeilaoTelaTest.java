@@ -13,11 +13,9 @@ import java.io.IOException;
 
 import br.com.alura.leilao.R;
 import br.com.alura.leilao.api.retrofit.client.TesteWebClient;
-import br.com.alura.leilao.formatter.FormatadorDeMoeda;
 import br.com.alura.leilao.model.Leilao;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static br.com.alura.leilao.matchers.ViewMatcher.apareceLeilaoNaPosicao;

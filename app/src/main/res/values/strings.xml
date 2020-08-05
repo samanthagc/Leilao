@@ -4,4 +4,5 @@
     <string name="menor_lance">Menor lance:</string>
     <string name="maiores_lances">Maiores lances</string>
     <string name="imagem_do_leilao">Imagem do leilão</string>
+    <string name="nome_hint">Nome</string>
 </resources>
