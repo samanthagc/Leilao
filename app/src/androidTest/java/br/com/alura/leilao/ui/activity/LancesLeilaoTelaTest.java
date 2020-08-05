@@ -1,7 +1,6 @@
 package br.com.alura.leilao.ui.activity;
 
 import android.content.Intent;
-import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 
 import org.junit.After;
@@ -13,14 +12,26 @@ import java.io.IOException;
 
 import br.com.alura.leilao.BaseTesteIntegracao;
 import br.com.alura.leilao.R;
+import br.com.alura.leilao.formatter.FormatadorDeMoeda;
 import br.com.alura.leilao.model.Leilao;
+import br.com.alura.leilao.model.Usuario;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
+import static android.support.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 
 public class LancesLeilaoTelaTest extends BaseTesteIntegracao {
 
@@ -36,49 +47,68 @@ public class LancesLeilaoTelaTest extends BaseTesteIntegracao {
 
     @Test
     public void deve_AtualizarLancesDoLeilao_QuandoReceberUmLance() throws IOException {
-        //Salvar leilão na API
         tentaSalvarLeilaoNaApi(new Leilao("TV"));
 
-        //Inicializar a main Activity
         mainActivity.launchActivity(new Intent());
 
-        //Clica no leilao
         onView(withId(R.id.lista_leilao_recyclerview))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+                .perform(actionOnItemAtPosition(0, click()));
 
-        //Clica no fab na tela de lances do leilão
-        onView(withId(R.id.lances_leilao_fab_adiciona))
+        onView(allOf(withId(R.id.lances_leilao_fab_adiciona), isDisplayed())).perform(click());
+
+        onView(allOf(withText("Usuários não encontrados"),
+                withId(R.id.alertTitle)))
+                .check(matches(isDisplayed()));
+        onView(allOf(withText("Não existe usuários cadastrados! Cadastre um usuário para propor o lance."),
+                withId(android.R.id.message)))
+                .check(matches(isDisplayed()));
+
+        onView(allOf(withText("Cadastrar usuário"), isDisplayed()))
                 .perform(click());
 
-        //Verifica se aparece dialog de aviso por não ter usuário com título e mensagem esperada
-        onView(withText("Usuários não encontrados"))
-                .check(matches(isDisplayed()));
-        onView(withText("Não existe usuários cadastrados! Cadastre um usuário para propor o lance."))
-                .check(matches(isDisplayed()));
-
-        //Clica no botão "Cadastrar Usuário"
-        onView(withText("Cadastrar usuário"))
+        onView(allOf(withId(R.id.lista_usuario_fab_adiciona),
+                isDisplayed()))
                 .perform(click());
 
-        //Clica no fab tela de lista de usuários
+        onView(allOf(withId(R.id.form_usuario_nome_edittext),
+                isDisplayed()))
+                .perform(click(), typeText("Ana"), closeSoftKeyboard());
 
-        //Clica no EditText e preenche com o nome do usuário
+        onView(allOf(withId(android.R.id.button1),
+                withText("Adicionar"),
+                isDisplayed()))
+                .perform(scrollTo(), click());
 
-        //Clica em Adicionar
+        pressBack();
 
-        //Clica no back do Android
+        onView(allOf(withId(R.id.lances_leilao_fab_adiciona),
+                isDisplayed()))
+                .perform(click());
 
-        //Clica no fab na tela de lances do leilão
+        onView(allOf(withText("Novo lance"),
+                withId(R.id.alertTitle)))
+                .check(matches(isDisplayed()));
 
-        //Verifica visibilidade do dialog com título esperado
+        onView(allOf(withId(R.id.form_lance_valor_edittext),
+                isDisplayed()))
+                .perform(click(), typeText("200"), closeSoftKeyboard());
 
-        //Clica no EditText de valor  e preenche
+        onView(allOf(withId(R.id.form_lance_usuario), isDisplayed())).perform(click());
+        onData(is(new Usuario(1, "Ana")))
+                .inRoot(isPlatformPopup())
+                .perform(click());
 
-        //Seleciona o usuário
+        onView(allOf(withText("Propor"), isDisplayed())).perform(click());
 
-        //Clica no botão "Propor"
-
-        //Fazer assertion p/ views de maior e menor lance, e também, para os maiores lances
+        FormatadorDeMoeda formatador = new FormatadorDeMoeda();
+        onView(withId(R.id.lances_leilao_maior_lance))
+                .check(matches(allOf(withText(formatador.transformaEmReal(200)),
+                        isDisplayed())));
+        onView(withId(R.id.lances_leilao_menor_lance))
+                .check(matches(allOf(withText(formatador.transformaEmReal(200)),
+                        isDisplayed())));
+        onView(withId(R.id.lances_leilao_maiores_lances))
+                .check(matches(allOf(withText("200.0 - (1) Ana\n"), isDisplayed())));
 
     }
 
