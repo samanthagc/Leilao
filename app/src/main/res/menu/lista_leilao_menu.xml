@@ -5,6 +5,6 @@
     <item
         android:id="@+id/lista_leilao_menu_usuarios"
         android:icon="@drawable/ic_usuarios"
-        android:title="Usuários"
+        android:title="@string/usuarios_title"
         app:showAsAction="always" />
 </menu>
